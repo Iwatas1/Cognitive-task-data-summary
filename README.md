@@ -2,7 +2,7 @@
 OSPAN is a cognitive task that the sample is required to remember random sequences of alphabets of certain length (either 4, 5, 6, 7, or 8, that are randomly assigned). Alphabets are shown one by one on the screen (this can be any device that they used for this task). 
 Between each letters, sample is asked whether the math equation on the screen is correct or not. For example, if '1 + 1 = 2' is on the screen, sample should respond 'correct' on the screen. If '1 + 1 = 3' on the screen, then sample would answer 'wrong'. After all alphabets are shown  (either 4, 5, 6, 7, or 8 letters), sample is asked to input the whole sequence of alphabets. 
 
-The script ospan_task.m scores all samples' response in two distinct grading system.
+The script ospan.m scores all samples' response in two distinct grading system.
 
 1. strict scoring: This shows the percentage of letters that are in the exact positions with the answer.
 
