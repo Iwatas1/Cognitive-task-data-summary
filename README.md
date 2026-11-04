@@ -22,3 +22,20 @@ The output will show the average, standard deviation, and error rates in two dif
 # RST
 
 Cognitive task that sample has to either tap the congruent side of screen or incongruent side of the screen based on memorized objects. Sample are given three tests: congruent, incongruent, and mix. In the beginning of the congruent and incongruent test, sample is given one object each. For instance, if sample was shown picture of apple in the beginning of the congruent task, then sample should tap the side that has apple on the screen
+
+# Pipeline functions (`pipeline/`)
+
+MATLAB functions that preprocess the HowRU cognitive task exports and build the long / wide / overnight-difference summary tables.
+
+| Step | Functions |
+|---|---|
+| Preprocess (one row per trial) | `update_FTT`, `update_OSPAN`, `update_RST`, `update_WPA`, `update_WPA_night`, `update_WPA_morning` |
+| Summarize | `summarize_RST`, `summarize_WPA`, `summarize_Mem` |
+
+`file_path` is the local data root; outputs are written under `file_path/Cog_Tasks/...`.
+
+Local, untracked files in `file_path` (one participant ID per line; both are in `.gitignore`):
+- `excluded_ids.txt`: participants left out of `summarize_RST`
+- `berlin_ids.txt`: participants whose timestamps are converted with Europe/Berlin time
+
+Helper functions called by these scripts but not in this repo: `scoring_FTT`, `WPA_scoring`, `session_scoring`, `overnight_scoring`.
