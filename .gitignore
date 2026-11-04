@@ -6,3 +6,4 @@
 *.edf
 *.pickle
 excluded_ids.txt
+berlin_ids.txt
