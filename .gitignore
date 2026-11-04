@@ -1,0 +1,9 @@
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.mat
+*.edf
+*.pickle
+excluded_ids.txt
+berlin_ids.txt

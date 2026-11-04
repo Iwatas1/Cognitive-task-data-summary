@@ -1,5 +1,14 @@
-T = readtable('OSPAN_preprocessed _yeh.csv');
-T_study = readtable("K08_StudySheet_032524.xlsx"); %import csv using file path to raw csv file
+%% ---- Local settings (edit before running; do not commit real paths) ----
+data_dir   = 'PATH/TO/DATA';     % folder with the exported HowRU files
+output_dir = 'PATH/TO/OUTPUT';   % where summary files are written
+study_sheet = 'StudySheet.xlsx'; % study tracking sheet inside data_dir
+% Excluded participant IDs: one per line in a local, untracked text file
+exclude_ids = strtrim(readlines(fullfile(data_dir, 'excluded_ids.txt')));
+exclude_ids = exclude_ids(exclude_ids ~= "");
+%% ----------------------------------------------------------------------
+
+T = readtable(fullfile(data_dir, 'OSPAN_preprocessed _yeh.csv'));
+T_study = readtable(fullfile(data_dir, study_sheet)); %import csv using file path to raw csv file
 not_need = {'id', 'user_id'};
 T(:,not_need) = [];%eliminate columns that are not needed
 T.problem_set = string(T.problem_set);
@@ -15,10 +24,7 @@ end
 T_study.SID = string(T_study.SID);
 user = unique(T.user);
 %{
-user = erase(user,["124", "125","126","127"]); only for k08
-for i = 1:4
-    user(17) = [];
-end
+user = setdiff(user, exclude_ids); % drop excluded participants
 %}
 hours = hour(T.started_at_pst);
 T.date = string(datetime(T.started_at_pst,"Format","dd-MMM-uuuu"));
@@ -174,13 +180,12 @@ for i = 1:(width(wide)-1)/4
 end
 wide = wide(:,col_names);
 %%
-writetable(wide,"C:\Users\230Student01\Desktop\ospan\ospan_wide_yeh.csv" )
-writetable(scores, "C:\Users\230Student01\Desktop\ospan\ospan_long_yeh.csv")
-writetable(per_day, "C:\Users\230Student01\Desktop\ospan\ospan_per_day_yeh.csv")
-writetable(per_level, "C:\Users\230Student01\Desktop\ospan\ospan_per_level_yeh.csv")
-
+writetable(wide,fullfile(output_dir, "ospan_wide_yeh.csv"))
+writetable(scores, fullfile(output_dir, "ospan_long_yeh.csv"))
+writetable(per_day, fullfile(output_dir, "ospan_per_day_yeh.csv"))
+writetable(per_level, fullfile(output_dir, "ospan_per_level_yeh.csv"))
 %%
-%for k08
+% study-specific summary
 scores = table;
 for i = 1:length(user)
     user_summary = table;
@@ -385,8 +390,7 @@ dif = renamevars(dif, ["Var1", "Var2"], ["SID", "SW"])
 dif.SW = str2double(dif.SW)
 
 %%
-writetable(dif, "C:\Users\230Student01\Desktop\ospan\ospan_difference.csv")
-
+writetable(dif, fullfile(output_dir, "ospan_difference.csv"))
 %%
 %main code
 
@@ -412,7 +416,7 @@ writetable(dif, "C:\Users\230Student01\Desktop\ospan\ospan_difference.csv")
 end
 
 %exporting to csv file
-directory = 'C:\Users\230Student01\Desktop\ospan';
+directory = output_dir;
 tables = {score, summary_dif_level, summary_SW, summary_day, summary_prb_set}
 filenames= {'ospan_scores.csv','ospan_summary_dif_level.csv','ospan_summary_SW.csv','ospan_summary_day.csv','ospan_summary_problem_set.cev'};
 for i = 1:length(filenames)
