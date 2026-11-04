@@ -1,5 +1,14 @@
-T_study = readtable("PATH/REDACTED");
-T = readtable("Rule_switch_processed.csv")
+%% ---- Local settings (edit before running; do not commit real paths) ----
+data_dir   = 'PATH/TO/DATA';     % folder with the exported HowRU files
+output_dir = 'PATH/TO/OUTPUT';   % where summary files are written
+study_sheet = 'StudySheet.xlsx'; % study tracking sheet inside data_dir
+% Excluded participant IDs: one per line in a local, untracked text file
+exclude_ids = strtrim(readlines(fullfile(data_dir, 'excluded_ids.txt')));
+exclude_ids = exclude_ids(exclude_ids ~= "");
+%% ----------------------------------------------------------------------
+
+T_study = readtable(fullfile(data_dir, study_sheet));
+T = readtable(fullfile(data_dir, "Rule_switch_processed.csv"));
 T.started_at_pst = datetime(T.started_at / 1000, 'convertfrom','posixtime','TimeZone','America/Los_Angeles', 'Format','dd-MMM-yyyy HH:mm:ss');
 T.finished_at_pst = datetime(T.finished_at /1000, 'convertfrom','posixtime','TimeZone','America/Los_Angeles', 'Format','dd-MMM-yyyy HH:mm:ss');
 no_need = {'id', 'user_id'};
@@ -16,17 +25,14 @@ T_study.SID = string(T_study.SID);
 
 user = unique(T.user)
 %%
-%only for K08
-user = erase(user,exclude_ids);
-for i = 1:4
-    user(17) = [];
-end
+% drop excluded participants
+user = setdiff(user, exclude_ids);
 
 T.date = string(datetime(T.started_at_pst,"Format","dd-MMM-uuuu"));
 T.time = T{:,'decisionTime'} - T{:,'startTime'};
 T.time = second(datetime(T.time ./ 1000,'convertfrom','posixtime','Format','dd-MMM-yyyy HH:mm:ss.SSSS')) * 1000;
 %%
-%for k08
+% study-specific summary
 warning('off', 'all')
 test_summary = table;
 user_summary = table;
@@ -90,6 +96,6 @@ for i = 1:length(user)
     yeh = vertcat(yeh, user_summary);
 end
 yeh
-writetable(yeh,"PATH/REDACTED")
+writetable(yeh,fullfile(output_dir, "RST_summary_yeh.csv"))
 %%
-writetable(test_summary,"PATH/REDACTED")
+writetable(test_summary,fullfile(output_dir, "RST_summary.csv"))
