@@ -1,6 +1,6 @@
 # Cognitive task data summary
 
-MATLAB code for sorting, scoring, and summarizing HowRU app cognitive tasks (FTT, OSPAN, RST, WPA), one folder per study (K08, PSF).
+MATLAB code for sorting, scoring, and summarizing HowRU app cognitive tasks (FTT, OSPAN, RST, WPA), plus the T1D memory task, one folder per study (K08, PSF, T1D).
 
 ## Setup
 1. Copy `study_config_template.m` to `study_config.m` in the study folder and fill in the data paths and ID lists.
