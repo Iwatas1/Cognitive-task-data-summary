@@ -5,4 +5,6 @@
 *.mat
 *.edf
 *.pickle
+*.mlx
+study_config.m
 excluded_ids.txt
